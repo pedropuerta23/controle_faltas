@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+
+{% block title %}Relatório Mensal{% endblock %}
+
+{% block content %}
+<h2 class="mb-4">Relatório de Faltas - {{ mes }}</h2>
+
+<form method="get" class="row mb-4 g-3 align-items-end">
+    <div class="col-md-4">
+        <label class="form-label">Mês (YYYY-MM)</label>
+        <input type="month" name="mes" class="form-control" value="{{ mes }}">
+    </div>
+    <div class="col-md-4">
+        <button type="submit" class="btn btn-secondary w-100">Gerar</button>
+    </div>
+    <div class="col-md-4">
+        <a href="{{ url_for('index') }}" class="btn btn-outline-primary w-100">Voltar</a>
+    </div>
+</form>
+
+<table class="table table-striped table-hover bg-white shadow-sm">
+    <thead class="table-light">
+        <tr>
+            <th>Funcionário</th>
+            <th>Total de Faltas</th>
+            <th>Total de Horas Não Trabalhadas</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for funcionario, dados in resumo.items() %}
+        <tr>
+            <td>{{ funcionario }}</td>
+            <td>{{ dados.total_faltas }}</td>
+            <td>{{ dados.total_horas|round(1)|replace('.', ',') }}</td>
+        </tr>
+        {% endfor %}
+
+        {% if resumo|length == 0 %}
+        <tr>
+            <td colspan="3" class="text-center text-muted">Nenhum dado disponível para este mês.</td>
+        </tr>
+        {% endif %}
+    </tbody>
+</table>
+{% endblock %}
